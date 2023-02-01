@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Extra logging related to initialization of Log4j.
+ Set to debug or trace if log4j initialization is failing. -->
+
+<Configuration status="info">
+    <Appenders>
+        <!-- Console appender configuration -->
+        <Console name="LogToConsole" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %msg%n" />
+        </Console>
+
+    </Appenders>
+    <Loggers>
+        <Logger name="nixs.com" level="info" additivity="false">
+            <AppenderRef ref="LogToConsole"/>
+        </Logger>
+        <!-- Root logger referring to console appender -->
+        <Root level="error">
+            <AppenderRef ref="LogToConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>

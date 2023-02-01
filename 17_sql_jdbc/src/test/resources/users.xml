@@ -1,0 +1,6 @@
+<dataset>
+    <users>
+        <user id="1" login="login" password="password" email="email@nixs.com" firstName="firstName"
+              lastname="lastName" birthday="1998-01-01" role_id="1"/>
+    </users>
+</dataset>

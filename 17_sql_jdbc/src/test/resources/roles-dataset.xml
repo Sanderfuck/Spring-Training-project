@@ -1,0 +1,7 @@
+<dataset>
+    <roles>
+        <role id="1" name="ADMIN"/>
+        <role id="2" name="USER"/>
+        <role id="3" name="TEST"/>
+    </roles>
+</dataset>
