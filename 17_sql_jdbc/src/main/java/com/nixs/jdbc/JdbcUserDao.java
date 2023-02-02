@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,7 +47,7 @@ public class JdbcUserDao extends GenericJdbcDao<User> implements UserDao {
         try (Connection connection = dbService.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             setUser(user, statement);
-            statement.setLong(7, user.getId());
+            statement.setLong(8, user.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.error("User not updated");
@@ -140,7 +139,7 @@ public class JdbcUserDao extends GenericJdbcDao<User> implements UserDao {
         statement.setString(3, user.getEmail());
         statement.setString(4, user.getFirstName());
         statement.setString(5, user.getLastName());
-        statement.setDate(6, new Date(user.getBirthday().getYear()));
+        statement.setDate(6, user.getBirthday());
         statement.setLong(7, user.getRole_id());
     }
 
@@ -152,7 +151,7 @@ public class JdbcUserDao extends GenericJdbcDao<User> implements UserDao {
         user.setEmail(resultSet.getString("email"));
         user.setFirstName(resultSet.getString("first_name"));
         user.setLastName(resultSet.getString("last_name"));
-        user.setBirthday(resultSet.getDate("birthday").toLocalDate());
+        user.setBirthday(resultSet.getDate("birthday"));
         user.setRole_id(resultSet.getLong("role_id"));
         return user;
     }

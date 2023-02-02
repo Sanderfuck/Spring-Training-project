@@ -3,35 +3,33 @@ package com.nixs.jdbc;
 import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
+import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.nixs.model.Role;
 import com.nixs.service.DbService;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 
-@RunWith(JUnit4.class)
 public class JdbcRoleDaoTest {
+    private JdbcRoleDao roleDao;
     private DbService dbService = new DbService();
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(dbService.getConnection());
 
-    private JdbcRoleDao roleDao;
-
-
     @Before
     public void setUp() {
         roleDao = new JdbcRoleDao(dbService);
+
     }
 
     @Test
+    @DataSet(cleanBefore = true)
     public void shouldCreateRoles() {
         Role actualTest = new Role();
         actualTest.setName("TEST");
@@ -40,7 +38,6 @@ public class JdbcRoleDaoTest {
         Role actualUser = new Role();
         actualUser.setName("USER");
         actualUser.setId(2L);
-
 
         roleDao.create(actualTest);
         roleDao.create(actualUser);
@@ -53,8 +50,8 @@ public class JdbcRoleDaoTest {
     }
 
     @Test
-    @DataSet(value = "roles.xml")
-    @ExpectedDataSet("roles-dataset.xml")
+    @DataSet(value = "database/dataset/roles.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @ExpectedDataSet("database/dataset/roles-update.yml")
     public void shouldUpdateRole() {
         Role role = roleDao.findById(1L);
         role.setName("ADMIN");
@@ -62,37 +59,34 @@ public class JdbcRoleDaoTest {
     }
 
     @Test
-    @DataSet("roles.xml")
-    public void shouldRemoveRoleAfterAdd() {
+    @DataSet(value = "database/dataset/roles.yml", cleanBefore = true)
+    public void shouldRemoveRole() {
         Role roleTest = new Role();
         roleTest.setName("TEST");
-
-        roleDao.create(roleTest);
-        List<Role> rolesBeforeRemove = roleDao.findAll();
-        assertEquals(3, rolesBeforeRemove.size());
+        roleTest.setId(1L);
 
         roleDao.remove(roleTest);
-        List<Role> rolesAfterRemove = roleDao.findAll();
-        assertEquals(2, rolesAfterRemove.size());
+        List<Role> rolesBeforeRemove = roleDao.findAll();
+        assertEquals(1, rolesBeforeRemove.size());
     }
 
     @Test
-    @DataSet("roles-dataset.xml")
+    @DataSet("database/dataset/roles.yml")
     public void shouldFindAllRolesDataSet() {
         List<Role> roles = roleDao.findAll();
-        assertEquals(3, roles.size());
+        assertEquals(2, roles.size());
     }
 
     @Test
-    @DataSet("roles-default.xml")
-    public void shouldFindAdminById() {
+    @DataSet("database/dataset/roles.yml")
+    public void shouldFindRoleById() {
         Role role = roleDao.findById(1L);
-        assertEquals("ADMIN", role.getName());
+        assertEquals("TEST", role.getName());
     }
 
     @Test
-    @DataSet("roles-default.xml")
-    public void shouldFindUserByName() {
+    @DataSet("database/dataset/roles.yml")
+    public void shouldFindRoleByName() {
         Role role = roleDao.findByName("USER");
         assertEquals(Optional.of(2L), Optional.of(role.getId()));
     }

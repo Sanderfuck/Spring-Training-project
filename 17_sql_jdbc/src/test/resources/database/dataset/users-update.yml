@@ -1,0 +1,18 @@
+users:
+  - id: 1
+    login: "test"
+    password: "password"
+    email: "email@nixs.com"
+    first_name: "firstName"
+    last_name: "lastName"
+    birthday: "1999-01-01"
+    role_id: 1
+
+  - id: 2
+    login: "user"
+    password: "password2"
+    email: "email2@nixs.com"
+    first_name: "firstName2"
+    last_name: "lastName2"
+    birthday: "1990-01-01"
+    role_id: 2

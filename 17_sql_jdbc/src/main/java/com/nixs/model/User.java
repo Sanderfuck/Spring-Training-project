@@ -2,7 +2,7 @@ package com.nixs.model;
 
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 @Data
 public class User {
@@ -12,6 +12,6 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
-    private LocalDate birthday;
+    private Date birthday;
     private Long role_id;
 }
