@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: oscarfonts/h2
+    container_name: kapusniak-database
+    ports:
+      - "1521:1521"
+    environment:
+      - H2_OPTIONS=-ifNotExists
+      - DB_TYPE=h2
+      - DB_NAME=testdb
+      - DB_USER=sa
+      - DB_PASSWORD=
+
+  app:
+    image: 25_docker
+    container_name: kapusniak-app
+    ports:
+      - "8081:8081"
+    environment:
+      - JDBC_URL=jdbc:h2:tcp://db:1521/testdb;INIT=runscript from '/sql/ddl.sql'\;runscript from '/sql/dml.sql'
+      - JDBC_USER=sa
+      - JDBC_PASSWORD=
+    depends_on:
+      - db

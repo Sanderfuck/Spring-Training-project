@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Properties;
 
 public class DbService {
@@ -36,12 +37,15 @@ public class DbService {
 
     private void configureDataSource() {
         Properties properties = getProperties();
+        String jdbc_url = System.getenv("JDBC_URL");
 
         DATA_SOURCE = new BasicDataSource();
         DATA_SOURCE.setDriverClassName(properties.getProperty("jdbc.driverClassName"));
-        DATA_SOURCE.setUrl(properties.getProperty("jdbc.url"));
+        DATA_SOURCE.setUrl(Objects.nonNull(jdbc_url) ? jdbc_url : properties.getProperty("jdbc.url"));
         DATA_SOURCE.setUsername(properties.getProperty("jdbc.username"));
         DATA_SOURCE.setPassword(properties.getProperty("jdbc.password"));
+
+        logger.info(DATA_SOURCE.getUrl(), "URL uses for database: ");
     }
 
     private Properties getProperties() {

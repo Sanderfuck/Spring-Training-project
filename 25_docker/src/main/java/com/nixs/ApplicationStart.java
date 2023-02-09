@@ -5,8 +5,7 @@ import com.nixs.jdbc.JdbcUserDao;
 import com.nixs.service.DbService;
 
 public class ApplicationStart {
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         DbService dbService = new DbService();
         JdbcRoleDao roleDao = new JdbcRoleDao(dbService);
         System.out.println(roleDao.findAll());
