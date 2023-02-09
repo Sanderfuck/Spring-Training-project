@@ -18,10 +18,9 @@ public class JdbcRoleDao extends GenericJdbcDao<Role> implements RoleDao {
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final Logger logger = LogManager.getLogger(JdbcRoleDao.class);
-    private DbService dbService;
 
     public JdbcRoleDao(DbService dbService) {
-        this.dbService = dbService;
+        super(dbService);
     }
 
     @Override

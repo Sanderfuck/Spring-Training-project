@@ -16,10 +16,9 @@ import java.util.List;
 
 public class JdbcUserDao extends GenericJdbcDao<User> implements UserDao {
     private static final Logger logger = LogManager.getLogger(JdbcUserDao.class);
-    private DbService dbService;
 
     public JdbcUserDao(DbService dbService) {
-        this.dbService = dbService;
+        super(dbService);
     }
 
     @Override
