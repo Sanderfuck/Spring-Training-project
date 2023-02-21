@@ -5,6 +5,8 @@ import com.nixs.model.User;
 import com.nixs.service.AuthenticationServiceImpl;
 import com.nixs.service.RoleServiceImpl;
 import com.nixs.service.UserServiceImpl;
+import com.nixs.service.ValidationService;
+import org.owasp.encoder.Encode;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -60,7 +62,7 @@ public class InsertUserServlet extends HttpServlet {
         request.setAttribute("rolesList", roles);
         User user = userConstructor(request);
 
-        List<String> errors = validateUser(user);
+        List<String> errors = ValidationService.validateUser(user, userId);
         if (errors.isEmpty()) {
             insertUser(user);
             response.sendRedirect("admin-home");
@@ -74,39 +76,12 @@ public class InsertUserServlet extends HttpServlet {
         clearUserId();
     }
 
-    private List<String> validateUser(User user) {
-        List<String> errors = new ArrayList<>();
-
-        if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            errors.add("Login is required");
-        }
-
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            errors.add("Email is required");
-        }
-
-        if (user.getRoleId() == null || user.getRoleId().toString().isEmpty()) {
-            errors.add("Role is required");
-        }
-
-        if (user.getBirthday() == null || user.getBirthday().toString().isEmpty()) {
-            errors.add("Date is required");
-        }
-
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            if (userId == null) {
-                errors.add("Password is required");
-            }
-        }
-        return errors;
-    }
-
     private User userConstructor(HttpServletRequest request) {
         User user = new User();
         user.setId(userId);
-        user.setEmail(request.getParameter("email"));
-        user.setFirstName(request.getParameter("first_name"));
-        user.setLastName(request.getParameter("last_name"));
+        user.setEmail(Encode.forHtml(request.getParameter("email")));
+        user.setFirstName(Encode.forHtml(request.getParameter("first_name")));
+        user.setLastName(Encode.forHtml(request.getParameter("last_name")));
         user.setRoleId(Long.parseLong(request.getParameter("role")));
         String birthday = request.getParameter("birthday");
         setUserBirthday(user, birthday);
@@ -119,7 +94,7 @@ public class InsertUserServlet extends HttpServlet {
             login = userServiceImpl.getUser(userId).getLogin();
             password = getPasswordForEditUser(getParameterPassword);
         } else {
-            login = request.getParameter("login");
+            login = Encode.forHtml(request.getParameter("login"));
             password = AuthenticationServiceImpl.encryptPassword(getParameterPassword);
         }
 

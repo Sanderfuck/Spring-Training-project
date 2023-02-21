@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
 <head>
@@ -73,14 +74,14 @@
 
         <tr>
             <td>Email:</td>
-            <td><input type="text" name="email" value="<c:out value="${userDto.email}"/>"></td>
+            <td><input type="text" name="email" value="<c:out value="${userDto.email}" />"></td>
             <td><c:if test="${errors.contains('Email is required')}">
                 <font color="red">Email is required</font>
             </c:if></td>
         </tr>
         <tr>
             <td>First name:</td>
-            <td><input type="text" name="first_name" value="<c:out value="${userDto.firstName}"/>"></td>
+            <td><input type="text" name="first_name" value="<c:out value="${(userDto.firstName)}"/>"></td>
             <td><c:if test="${errors.contains('Email is required')}">
                 <font color="red">First name is required</font>
             </c:if></td>
@@ -94,7 +95,7 @@
         </tr>
         <tr>
             <td>Date:</td>
-            <td><input type="text" name="birthday" value="<c:out value="${userDto.birthday}"/>"></td>
+            <td><input type="date" name="birthday" value="${userDto.birthday}"></td>
             <td><c:if test="${errors.contains('Date is required')}">
                 <font color="red">Birthday is required</font>
             </c:if></td>
