@@ -20,12 +20,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean addUser(User user) {
-        user.setPassword(AuthenticationServiceImpl.encryptPassword(user.getPassword()));
         return dao.add(user);
     }
 
     public boolean updateUser(User user) {
-//        user.setPassword(AuthenticationServiceImpl.encryptPassword(user.getPassword()));
         return dao.update(user);
     }
 

@@ -7,6 +7,7 @@ import com.nixs.model.User;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
     private Dao<User> dao;
@@ -42,5 +43,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static boolean patternMatches(String data, String regexPattern) {
+        return Pattern.compile(regexPattern)
+                .matcher(data)
+                .matches();
     }
 }

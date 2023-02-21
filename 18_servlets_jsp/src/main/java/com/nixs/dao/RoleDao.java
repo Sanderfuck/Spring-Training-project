@@ -18,14 +18,6 @@ public class RoleDao implements Dao<Role> {
     private static final String NAME_COLUMN = "name";
     private static final Logger logger = LogManager.getLogger(RoleDao.class);
     private DbService dbService;
-//    private static List<Role> roles;
-
-//    public RoleDao() {
-//        roles = new ArrayList<>();
-//        roles.add(new Role(1L,"ADMIN"));
-//        roles.add(new Role(2L,"USER"));
-//    }
-
 
     public RoleDao() {
         dbService = new DbService();
@@ -84,12 +76,6 @@ public class RoleDao implements Dao<Role> {
 
     @Override
     public Role getByName(String name) {
-//        for(Role role : roles) {
-//            if (role.getName().equals(name)) {
-//                return role;
-//            }
-//        }
-//        return null;
         logger.info("FindByName method of role was called. Param: name ={}", name);
         String sql = "SELECT * FROM role WHERE name = ?";
         try (Connection connection = dbService.getConnection();
@@ -104,12 +90,6 @@ public class RoleDao implements Dao<Role> {
 
     @Override
     public Role getById(Long id) {
-//        for(Role role : roles) {
-//            if (role.getId().equals(id)) {
-//                return role;
-//            }
-//        }
-//        return null;
         logger.info("FindById method of role was called. Param: id ={}", id);
         String sql = "SELECT * FROM role WHERE id = ?";
         try (Connection connection = dbService.getConnection();
@@ -124,7 +104,6 @@ public class RoleDao implements Dao<Role> {
 
     @Override
     public List<Role> getAll() {
-//        return roles;
         logger.info("FindAll method of role was called.");
         String sql = "SELECT * FROM role";
         try (Connection connection = dbService.getConnection();

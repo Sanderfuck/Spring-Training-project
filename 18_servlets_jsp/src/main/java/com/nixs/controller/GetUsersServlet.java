@@ -23,8 +23,8 @@ public class GetUsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<UserDto> userList = userServiceImpl.getUsers();
 
+        List<UserDto> userList = userServiceImpl.getUsers();
         request.setAttribute("userList", userList);
         request.getRequestDispatcher("/WEB-INF/views/admin-home.jsp").forward(request, response);
     }

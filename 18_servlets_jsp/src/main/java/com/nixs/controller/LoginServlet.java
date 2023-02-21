@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Objects;
 
 @WebServlet(urlPatterns = {"/login", "/"})
 public class LoginServlet extends HttpServlet {
+    private static final Long ADMIN_ROLE_ID = 1L;
     private AuthenticationService authenticationService;
 
     @Override
@@ -35,11 +37,13 @@ public class LoginServlet extends HttpServlet {
 
         String login = request.getParameter("login");
         String password = request.getParameter("password");
+
         try {
             User user = authenticationService.login(login, password);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            if (user.getRoleId() == 1L) {
+
+            if (Objects.equals(user.getRoleId(), ADMIN_ROLE_ID)) {
                 response.sendRedirect("/admin-home");
             } else {
                 response.sendRedirect("/user-home");
@@ -47,7 +51,6 @@ public class LoginServlet extends HttpServlet {
         } catch (AuthenticationException e) {
             request.setAttribute("errorMsg", e.getMessage());
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
-
         }
     }
 }

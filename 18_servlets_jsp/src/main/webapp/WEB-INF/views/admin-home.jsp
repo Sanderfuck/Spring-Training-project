@@ -5,7 +5,6 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="/css/admin-home.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
 
     <script type="text/javascript">
         function showConfirm() {
@@ -18,12 +17,41 @@
     </script>
     <meta charset="UTF-8">
     <title>User List</title>
-    ${user.firstName}  ${user.lastName}
+    ${user.firstName} ${user.lastName}
     <a href="<%=request.getContextPath()%>/logout"> Logout</a>
+
+    <style>
+        .table {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 60%;
+        }
+
+        .table td, .table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .table tr:hover {
+            background-color: #ddd;
+        }
+
+        .table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 <h1>Users registered:</h1>
-<table>
+<table class="table">
     <tr>
         <th>Login</th>
         <th>Email</th>
@@ -46,8 +74,6 @@
                     <input type="hidden" name="userId" value="${user.id}">
                     <button type="submit">Edit</button>
                 </form>
-            </td>
-            <td>
                 <form action="delete" method="POST">
                     <input type="hidden" name="userId" value="${user.id}">
                     <button onclick="return showConfirm()" type="submit">Delete</button>

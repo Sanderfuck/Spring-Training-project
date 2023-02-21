@@ -13,7 +13,9 @@ import java.io.IOException;
 @WebServlet("/user-home")
 public class UserHomeServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user == null) {

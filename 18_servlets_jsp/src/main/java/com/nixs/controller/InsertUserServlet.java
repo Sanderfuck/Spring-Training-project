@@ -2,6 +2,7 @@ package com.nixs.controller;
 
 import com.nixs.model.Role;
 import com.nixs.model.User;
+import com.nixs.service.AuthenticationServiceImpl;
 import com.nixs.service.RoleServiceImpl;
 import com.nixs.service.UserServiceImpl;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/add-user")
-public class AddUpdateUserServlet extends HttpServlet {
+public class InsertUserServlet extends HttpServlet {
     private UserServiceImpl userServiceImpl;
     private Long userId;
     private List<Role> roles;
@@ -32,12 +33,8 @@ public class AddUpdateUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String getParamUserId = request.getParameter("userId");
 
-        if (getParamUserId != null) {
-            userId = Long.parseLong(getParamUserId);
-        }
-
+        initUserId(request);
         User user = null;
 
         if (userId != null) {
@@ -61,35 +58,11 @@ public class AddUpdateUserServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("rolesList", roles);
-
-        User user = new User();
-        user.setId(userId);
-        user.setEmail(request.getParameter("email"));
-        user.setFirstName(request.getParameter("first_name"));
-        user.setLastName(request.getParameter("last_name"));
-        user.setRoleId(Long.parseLong(request.getParameter("role")));
-        String birthday = request.getParameter("birthday");
-        if (birthday.equals("")) {
-            user.setBirthday(null);
-        } else {
-            user.setBirthday(Date.valueOf(birthday));
-        }
-
-        if (userId != null) {
-            user.setLogin(userServiceImpl.getUser(userId).getLogin());
-            user.setPassword(userServiceImpl.getUser(userId).getPassword());
-        } else {
-            user.setLogin(request.getParameter("login"));
-            user.setPassword(request.getParameter("password"));
-        }
+        User user = userConstructor(request);
 
         List<String> errors = validateUser(user);
         if (errors.isEmpty()) {
-            if (user.getId() == null) {
-                userServiceImpl.addUser(user);
-            } else {
-                userServiceImpl.updateUser(user);
-            }
+            insertUser(user);
             response.sendRedirect("admin-home");
         } else {
             request.setAttribute("nameButton", nameButton);
@@ -121,9 +94,72 @@ public class AddUpdateUserServlet extends HttpServlet {
         }
 
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            errors.add("Password is required");
+            if (userId == null) {
+                errors.add("Password is required");
+            }
         }
         return errors;
+    }
+
+    private User userConstructor(HttpServletRequest request) {
+        User user = new User();
+        user.setId(userId);
+        user.setEmail(request.getParameter("email"));
+        user.setFirstName(request.getParameter("first_name"));
+        user.setLastName(request.getParameter("last_name"));
+        user.setRoleId(Long.parseLong(request.getParameter("role")));
+        String birthday = request.getParameter("birthday");
+        setUserBirthday(user, birthday);
+
+        String getParameterPassword = request.getParameter("password");
+        String login;
+        String password;
+
+        if (userId != null) {
+            login = userServiceImpl.getUser(userId).getLogin();
+            password = getPasswordForEditUser(getParameterPassword);
+        } else {
+            login = request.getParameter("login");
+            password = AuthenticationServiceImpl.encryptPassword(getParameterPassword);
+        }
+
+        user.setLogin(login);
+        user.setPassword(password);
+        return user;
+    }
+
+    private void initUserId(HttpServletRequest request) {
+        String getParamUserId = request.getParameter("userId");
+
+        if (getParamUserId != null) {
+            userId = Long.parseLong(getParamUserId);
+        }
+    }
+
+    private void setUserBirthday(User user, String birthday) {
+        if (birthday.equals("")) {
+            user.setBirthday(null);
+        } else {
+            user.setBirthday(Date.valueOf(birthday));
+        }
+    }
+
+    private String getPasswordForEditUser(String getParameterPassword) {
+        String password;
+        if (getParameterPassword.isEmpty()) {
+            password = userServiceImpl.getUser(userId).getPassword();
+        } else {
+            password = AuthenticationServiceImpl.encryptPassword(getParameterPassword);
+        }
+        return password;
+    }
+
+    private void insertUser(User user) {
+        if (user.getId() == null) {
+            userServiceImpl.addUser(user);
+        } else {
+            userServiceImpl.updateUser(user);
+        }
     }
 
     private void clearUserId() {
