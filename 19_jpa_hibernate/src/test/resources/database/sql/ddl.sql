@@ -1,3 +1,4 @@
+DROP ALL OBJECTS;
 CREATE TABLE IF NOT EXISTS role
 (
     id   BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -14,4 +15,5 @@ CREATE TABLE IF NOT EXISTS users
     last_name  VARCHAR(255) NOT NULL,
     birthday   DATE         NOT NULL,
     role_id    BIGINT       NOT NULL
+--     FOREIGN KEY (role_id) REFERENCES role(id)
 );

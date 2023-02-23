@@ -21,6 +21,10 @@ public class HibernateRoleDao implements HibernateDao<Role> {
         sessionFactory = HibernateUtil.getSessionFactory();
     }
 
+    public HibernateRoleDao(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     @Override
     public Optional<Role> findById(Long id) {
         logger.info("Find By id method of role was called. Param: id = {}", id);
@@ -49,7 +53,7 @@ public class HibernateRoleDao implements HibernateDao<Role> {
     public List<Role> findAll() {
         logger.info("Find all method of role was called.");
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Role> query = session.createQuery("FROM Role", Role.class);
             return query.getResultList();
         } catch (Exception e) {
@@ -68,7 +72,7 @@ public class HibernateRoleDao implements HibernateDao<Role> {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.saveOrUpdate(role);
-            transaction.commit();
+//            transaction.commit();
             return true;
         } catch (Exception e) {
             if (transaction != null) {
@@ -91,14 +95,14 @@ public class HibernateRoleDao implements HibernateDao<Role> {
         Session session = null;
         try {
             session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
+//            transaction = session.beginTransaction();
             session.delete(id);
-            transaction.commit();
+//            transaction.commit();
             return true;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
             logger.error("Roles not deleted");
             throw new DataProcessingException("Can't delete role with id: " + id, e);
         } finally {

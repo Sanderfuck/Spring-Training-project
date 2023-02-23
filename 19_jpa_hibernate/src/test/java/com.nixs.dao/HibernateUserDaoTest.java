@@ -3,10 +3,11 @@ package com.nixs.dao;
 import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
-import com.github.database.rider.core.connection.ConnectionHolderImpl;
 import com.github.database.rider.core.util.EntityManagerProvider;
 import com.nixs.model.User;
+import org.hibernate.Session;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -14,20 +15,21 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.github.database.rider.core.util.EntityManagerProvider.em;
 import static junit.framework.TestCase.assertEquals;
 
 public class HibernateUserDaoTest {
     private HibernateDao<User> userDao;
 
-    @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("TestDB");
+    @ClassRule
+    public static EntityManagerProvider emProvider = EntityManagerProvider.instance("TestDB");
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection());
 
     @Before
     public void setUp() {
-        userDao = new HibernateUserDao();
+        userDao = new HibernateUserDao(em().unwrap(Session.class).getSessionFactory());
     }
 
     @Test
@@ -55,7 +57,7 @@ public class HibernateUserDaoTest {
     @DataSet(cleanBefore = true)
     public void shouldCreateUser() {
         User userAdmin = new User();
-//        userAdmin.setId(1L);
+        userAdmin.setId(1L);
         userAdmin.setLogin("admin");
         userAdmin.setPassword("password");
         userAdmin.setEmail("email@nixs.com");

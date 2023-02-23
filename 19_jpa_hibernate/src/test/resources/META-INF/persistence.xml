@@ -9,13 +9,15 @@
         <class>com.nixs.model.Role</class>
 
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+<!--            <property name="javax.persistence.jdbc.url" value="jdbc:h2:./mydb;DATABASE_TO_UPPER=false;INIT=runscript from 'classpath:/database/sql/ddl.sql'"/>-->
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DATABASE_TO_UPPER=false;INIT=runscript from 'classpath:/database/sql/ddl.sql'"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.connection.autocommit" value="true"/>
 
         </properties>
 
