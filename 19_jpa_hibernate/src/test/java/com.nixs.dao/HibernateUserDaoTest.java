@@ -31,8 +31,8 @@ public class HibernateUserDaoTest {
 
     @Before
     public void setUp() {
-//        userDao = new HibernateUserDao(em().unwrap(Session.class).getSessionFactory());
-//        roleDao = new HibernateRoleDao(em().unwrap(Session.class).getSessionFactory());
+        userDao = new HibernateUserDao(em().unwrap(Session.class).getSessionFactory());
+        roleDao = new HibernateRoleDao(em().unwrap(Session.class).getSessionFactory());
     }
 
     @Test

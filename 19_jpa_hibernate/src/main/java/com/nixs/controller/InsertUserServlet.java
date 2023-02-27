@@ -5,8 +5,8 @@ import com.nixs.model.User;
 import com.nixs.service.AuthenticationServiceImpl;
 import com.nixs.service.RoleServiceImpl;
 import com.nixs.service.UserServiceImpl;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import org.owasp.encoder.Encode;
 
 import javax.servlet.ServletException;

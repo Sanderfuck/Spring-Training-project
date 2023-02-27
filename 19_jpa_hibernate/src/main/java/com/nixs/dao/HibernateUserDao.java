@@ -9,10 +9,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.hibernate.query.criteria.HibernateCriteriaBuilder;
-import org.hibernate.query.criteria.JpaCriteriaQuery;
-import org.hibernate.query.criteria.JpaRoot;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,9 +47,9 @@ public class HibernateUserDao implements HibernateDao<User> {
         logger.info("Find by name method of user was called. Param: name = {}", name);
 
         try (Session session = sessionFactory.openSession()) {
-            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-            JpaCriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
-            JpaRoot<User> root = criteriaQuery.from(User.class);
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
             criteriaQuery.select(root).where(builder.equal(root.get("login"), name));
 
             Query<User> query = session.createQuery(criteriaQuery);

@@ -9,10 +9,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.hibernate.query.criteria.HibernateCriteriaBuilder;
-import org.hibernate.query.criteria.JpaCriteriaQuery;
-import org.hibernate.query.criteria.JpaRoot;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,9 +46,9 @@ public class HibernateRoleDao implements HibernateDao<Role> {
         logger.info("Find by name method of role was called. Param: name = {}", name);
 
         try (Session session = sessionFactory.openSession()) {
-            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-            JpaCriteriaQuery<Role> criteriaQuery = builder.createQuery(Role.class);
-            JpaRoot<Role> root = criteriaQuery.from(Role.class);
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Role> criteriaQuery = builder.createQuery(Role.class);
+            Root<Role> root = criteriaQuery.from(Role.class);
             criteriaQuery.select(root).where(builder.equal(root.get("name"), name));
 
             Query<Role> query = session.createQuery(criteriaQuery);
