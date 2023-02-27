@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
 
-            if (Objects.equals(user.getRoleId(), ADMIN_ROLE_ID)) {
+            if (Objects.equals(user.getRole().getId(), ADMIN_ROLE_ID)) {
                 response.sendRedirect("/admin-home");
             } else {
                 response.sendRedirect("/user-home");

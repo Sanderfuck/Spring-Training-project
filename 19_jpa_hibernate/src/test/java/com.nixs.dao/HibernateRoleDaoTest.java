@@ -31,26 +31,26 @@ public class HibernateRoleDaoTest {
 
     @Before
     public void setUp() {
-        roleDao = new HibernateRoleDao(em().unwrap(Session.class).getSessionFactory());
+//        roleDao = new HibernateRoleDao(em().unwrap(Session.class).getSessionFactory());
 
     }
 
     @Test
-    @DataSet("database/dataset/roles.yml")
+    @DataSet("dataset/roles.yml")
     public void shouldFindRoleById() {
         Role role = roleDao.findById(1L).get();
         assertEquals("TEST", role.getName());
     }
 
     @Test
-    @DataSet("database/dataset/roles.yml")
+    @DataSet("dataset/roles.yml")
     public void shouldFindRoleByName() {
         Role role = roleDao.findByName("USER").get();
         assertEquals(Optional.of(2L), Optional.of(role.getId()));
     }
 
     @Test
-    @DataSet("database/dataset/roles.yml")
+    @DataSet("dataset/roles.yml")
     public void shouldFindAllRolesDataSet() {
         List<Role> roles = roleDao.findAll();
         assertEquals(2, roles.size());
@@ -61,11 +61,9 @@ public class HibernateRoleDaoTest {
     public void shouldCreateRoles() {
         Role actualTest = new Role();
         actualTest.setName("TEST");
-        actualTest.setId(1L);
 
         Role actualUser = new Role();
         actualUser.setName("USER");
-        actualUser.setId(2L);
 
         roleDao.save(actualTest);
         roleDao.save(actualUser);
@@ -78,8 +76,8 @@ public class HibernateRoleDaoTest {
     }
 
     @Test
-    @DataSet(value = "database/dataset/roles.yml", strategy = SeedStrategy.CLEAN_INSERT)
-    @ExpectedDataSet("database/dataset/roles-update.yml")
+    @DataSet(value = "dataset/roles.yml", strategy = SeedStrategy.CLEAN_INSERT)
+    @ExpectedDataSet("dataset/roles-update.yml")
     public void shouldUpdateRole() {
         Role role = roleDao.findById(1L).get();
         role.setName("ADMIN");
@@ -87,7 +85,7 @@ public class HibernateRoleDaoTest {
     }
 
     @Test
-    @DataSet(value = "database/dataset/roles.yml", cleanBefore = true)
+    @DataSet(value = "dataset/roles.yml", cleanBefore = true)
     public void shouldRemoveRole() {
         Role roleTest = new Role();
         roleTest.setName("TEST");

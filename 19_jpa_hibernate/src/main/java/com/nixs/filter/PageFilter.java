@@ -42,7 +42,7 @@ public class PageFilter implements Filter {
             return;
         }
 
-        List<String> availablePages = pages.get(user.getRoleId());
+        List<String> availablePages = pages.get(user.getRole().getId());
 
         if (availablePages.contains(servletPath)) {
             chain.doFilter(request, response);

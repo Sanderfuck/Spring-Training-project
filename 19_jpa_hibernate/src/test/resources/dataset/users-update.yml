@@ -7,7 +7,6 @@ users:
     last_name: "lastName"
     birthday: "1999-01-01"
     role_id: 1
-
   - id: 2
     login: "user"
     password: "password2"

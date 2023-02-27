@@ -4,6 +4,7 @@ import com.github.database.rider.core.DBUnitRule;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.core.util.EntityManagerProvider;
+import com.nixs.model.Role;
 import com.nixs.model.User;
 import org.hibernate.Session;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class HibernateUserDaoTest {
     private HibernateDao<User> userDao;
+    private HibernateDao<Role> roleDao;
 
     @ClassRule
     public static EntityManagerProvider emProvider = EntityManagerProvider.instance("TestDB");
@@ -29,66 +31,70 @@ public class HibernateUserDaoTest {
 
     @Before
     public void setUp() {
-        userDao = new HibernateUserDao(em().unwrap(Session.class).getSessionFactory());
+//        userDao = new HibernateUserDao(em().unwrap(Session.class).getSessionFactory());
+//        roleDao = new HibernateRoleDao(em().unwrap(Session.class).getSessionFactory());
     }
 
     @Test
-    @DataSet("database/dataset/users.yml")
+    @DataSet("dataset/users.yml")
     public void shouldFindUserById() {
         User user = userDao.findById(1L).get();
         assertEquals("admin", user.getLogin());
     }
 
     @Test
-    @DataSet("database/dataset/users.yml")
+    @DataSet("dataset/users.yml")
     public void shouldFindUserByLogin() {
         User user = userDao.findByName("user").get();
         assertEquals(Optional.of(2L), Optional.of(user.getId()));
     }
 
     @Test
-    @DataSet("database/dataset/users.yml")
+    @DataSet("dataset/users.yml")
     public void shouldFindAllUsersDataSet() {
         List<User> users = userDao.findAll();
         assertEquals(2, users.size());
     }
 
     @Test
-    @DataSet(cleanBefore = true)
+    @DataSet(value = "dataset/roles-update.yml", cleanBefore = true)
     public void shouldCreateUser() {
+
         User userAdmin = new User();
-        userAdmin.setId(1L);
         userAdmin.setLogin("admin");
         userAdmin.setPassword("password");
         userAdmin.setEmail("email@nixs.com");
         userAdmin.setFirstName("firstName");
         userAdmin.setLastName("lastName");
         userAdmin.setBirthday(new Date(1999, 1, 1));
-        userAdmin.setRoleId(1L);
+        userAdmin.setRole(roleDao.findByName("ADMIN").get());
 
         userDao.save(userAdmin);
 
         User userUser = new User();
-        userUser.setId(2L);
         userUser.setLogin("user");
         userUser.setPassword("password2");
         userUser.setEmail("email2@nixs.com");
         userUser.setFirstName("firstName2");
         userUser.setLastName("lastName2");
         userUser.setBirthday(new Date(1990, 1, 1));
-        userAdmin.setRoleId(2L);
+        userUser.setRole(roleDao.findByName("USER").get());
 
         userDao.save(userUser);
 
         List<User> usersList = userDao.findAll();
         assertEquals(2, usersList.size());
-        User userGetById = userDao.findById(1L).get();
-        assertEquals(userAdmin, userGetById);
+
+        User adminGetByName = userDao.findByName("admin").get();
+        assertEquals(userAdmin, adminGetByName);
+
+        User userGetByName = userDao.findByName("user").get();
+        assertEquals(userUser, userGetByName);
     }
 
     @Test
-    @DataSet("database/dataset/users.yml")
-    @ExpectedDataSet("database/dataset/users-update.yml")
+    @DataSet("dataset/users.yml")
+    @ExpectedDataSet("dataset/users-update.yml")
     public void shouldUpdateUser() {
         User user = userDao.findById(1L).get();
         user.setLogin("test");
@@ -96,8 +102,8 @@ public class HibernateUserDaoTest {
     }
 
     @Test
-    @DataSet("database/dataset/users.yml")
-    @ExpectedDataSet("database/dataset/users-remove.yml")
+    @DataSet("dataset/users.yml")
+    @ExpectedDataSet("dataset/users-remove.yml")
     public void shouldRemoveUser() {
         User user = new User();
         user.setId(2L);

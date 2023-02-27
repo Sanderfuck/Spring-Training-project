@@ -10,10 +10,7 @@ public class UserDto extends User {
 
     private Integer age;
 
-    @Getter
-    private String roleName;
-
-    public UserDto(User user, String roleName) {
+    public UserDto(User user) {
         super(user.getId(),
                 user.getLogin(),
                 user.getPassword(),
@@ -21,8 +18,7 @@ public class UserDto extends User {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getBirthday(),
-                user.getRoleId());
-        this.roleName = roleName;
+                user.getRole());
     }
 
     public Integer getAge() {

@@ -1,15 +1,15 @@
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
-        <property name="connection.url">jdbc:h2:./mydb;INIT=runscript from 'classpath:/database/sql/ddl.sql'\\; \
-            runscript from 'classpath:/database/sql/dml.sql'</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
+        <property name="connection.url">jdbc:h2:./mydb;INIT=runscript from 'classpath:/database/sql/dml.sql'</property>
         <property name="connection.driver_class">org.h2.Driver</property>
         <property name="connection.username">root</property>
         <property name="connection.password">root</property>
         <property name="show_sql">true</property>
-        <property name="hbm2ddl.auto">create-drop</property>
+        <property name="hbm2ddl.auto">update</property>
 
-        <mapping class="com.nixs.dao.HibernateRoleDao"/>
-        <mapping class="com.nixs.dao.HibernateUserDao"/>
+        <mapping class="com.nixs.model.User"/>
+        <mapping class="com.nixs.model.Role"/>
     </session-factory>
 </hibernate-configuration>
+

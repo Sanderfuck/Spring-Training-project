@@ -39,8 +39,8 @@
                 <tr>
                     <td>Login:</td>
                     <td><input type="text" name="login" value="<c:out value="${userDto.login}"/>"></td>
-                    <td><c:if test="${errors.contains('Login is required')}">
-                        <font color="red">Login is required</font>
+                    <td><c:if test="${errors.containsKey('login')}">
+                        <font color="red">${errors.get('login')}</font>
                     </c:if></td>
                 </tr>
             </c:when>
@@ -48,9 +48,9 @@
                 <tr>
                     <td>Login:</td>
                     <td><input type="text" name="login" value="<c:out value="${userDto.login}"/>" disabled></td>
-                    <td><c:if test="${errors.contains('Login is required')}">
-                        <font color="red">Login is required</font>
-                    </c:if></td>
+<%--                    <td><c:if test="${errors.containsKey('Login is required')}">--%>
+<%--                        <font color="red">Login is required</font>--%>
+<%--                    </c:if></td>--%>
                 </tr>
             </c:otherwise>
         </c:choose>
@@ -58,8 +58,8 @@
         <tr>
             <td>Password:</td>
             <td><input type="password" name="password"></td>
-            <td><c:if test="${errors.contains('Password is required')}">
-                <font color="red">Password is required</font>
+            <td><c:if test="${errors.containsKey('password')}">
+                <font color="red">${errors.get('password')}</font>
             </c:if></td>
         </tr>
         <tr>
@@ -67,7 +67,7 @@
             <td>
                 <input type="password" name="password_confirm">
             </td>
-            <td><c:if test="${errors.contains('Password confirm is required')}">
+            <td><c:if test="${errors.containsKey('Password confirm is required')}">
                 <font color="red">Password confirm is required</font>
             </c:if></td>
         </tr>
@@ -75,28 +75,28 @@
         <tr>
             <td>Email:</td>
             <td><input type="text" name="email" value="<c:out value="${userDto.email}" />"></td>
-            <td><c:if test="${errors.contains('Email is required')}">
-                <font color="red">Email is required</font>
+            <td><c:if test="${errors.containsKey('email')}">
+                <font color="red">${errors.get('email')}</font>
             </c:if></td>
         </tr>
         <tr>
             <td>First name:</td>
             <td><input type="text" name="first_name" value="<c:out value="${(userDto.firstName)}"/>"></td>
-            <td><c:if test="${errors.contains('Email is required')}">
-                <font color="red">First name is required</font>
+            <td><c:if test="${errors.containsKey('firstName')}">
+                <font color="red">${errors.get('firstName')}</font>
             </c:if></td>
         </tr>
         <tr>
             <td>Last name:</td>
             <td><input type="text" name="last_name" value="<c:out value="${userDto.lastName}"/>"></td>
-            <td><c:if test="${errors.contains('Email is required')}">
-                <font color="red">Last name is required</font>
+            <td><c:if test="${errors.containsKey('lastName')}">
+                <font color="red">${errors.get('lastName')}</font>
             </c:if></td>
         </tr>
         <tr>
             <td>Date:</td>
             <td><input type="date" name="birthday" value="${userDto.birthday}"></td>
-            <td><c:if test="${errors.contains('Date is required')}">
+            <td><c:if test="${errors.containsKey('Date is required')}">
                 <font color="red">Birthday is required</font>
             </c:if></td>
         </tr>
@@ -105,14 +105,14 @@
             <td>
                 <select name="role">
                     <c:forEach items="${rolesList}" var="userRole">
-                        <option value="${userRole.id}"
-                                <c:if test="${not empty userDto and userDto.roleId == userRole.id}">selected</c:if>>
+                        <option value="${userRole.name}"
+                                <c:if test="${not empty userDto and userDto.role.id == userRole.id}">selected</c:if>>
                                 ${userRole.name}
                         </option>
                     </c:forEach>
                 </select>
             </td>
-            <td><c:if test="${errors.contains('Role is required')}">
+            <td><c:if test="${errors.containsKey('Role is required')}">
                 <font color="red">Role is required</font>
             </c:if></td>
         </tr>

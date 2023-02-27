@@ -17,7 +17,7 @@ public class ValidationService {
             errors.add("Email is required");
         }
 
-        if (user.getRoleId() == null || user.getRoleId().toString().isEmpty()) {
+        if (user.getRole() == null || user.getRole().toString().isEmpty()) {
             errors.add("Role is required");
         }
 

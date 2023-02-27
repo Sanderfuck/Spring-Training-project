@@ -9,7 +9,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.hibernate.query.criteria.JpaCriteriaQuery;
+import org.hibernate.query.criteria.JpaRoot;
 
+//import javax.persistence.criteria.CriteriaBuilder;
+//import javax.persistence.criteria.CriteriaQuery;
+//import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +24,7 @@ public class HibernateRoleDao implements HibernateDao<Role> {
     private SessionFactory sessionFactory;
 
     public HibernateRoleDao() {
-        sessionFactory = HibernateUtil.getSessionFactory();
+        sessionFactory = HibernateUtil.getInstance();
     }
 
     public HibernateRoleDao(SessionFactory sessionFactory) {
@@ -42,7 +48,14 @@ public class HibernateRoleDao implements HibernateDao<Role> {
         logger.info("Find by name method of role was called. Param: name = {}", name);
 
         try (Session session = sessionFactory.openSession()) {
-            return Optional.ofNullable(session.get(Role.class, name));
+            HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+            JpaCriteriaQuery<Role> criteriaQuery = builder.createQuery(Role.class);
+            JpaRoot<Role> root = criteriaQuery.from(Role.class);
+            criteriaQuery.select(root).where(builder.equal(root.get("name"), name));
+
+            Query<Role> query = session.createQuery(criteriaQuery);
+            Role role = query.getSingleResult();
+            return Optional.ofNullable(role);
         } catch (Exception e) {
             logger.error("Role not find by name");
             throw new DataProcessingException("Can't get role by name: " + name, e);
@@ -72,7 +85,7 @@ public class HibernateRoleDao implements HibernateDao<Role> {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.saveOrUpdate(role);
-//            transaction.commit();
+            transaction.commit();
             return true;
         } catch (Exception e) {
             if (transaction != null) {
@@ -88,21 +101,21 @@ public class HibernateRoleDao implements HibernateDao<Role> {
     }
 
     @Override
-    public boolean delete(Long id) {
-        logger.info("Delete method of role was called. Param: id = {}", id);
+    public void delete(Long id) {
+        logger.info("Delete method of role was called. Param: role id = {}", id);
 
         Transaction transaction = null;
         Session session = null;
         try {
             session = sessionFactory.openSession();
-//            transaction = session.beginTransaction();
-            session.delete(id);
-//            transaction.commit();
-            return true;
+            transaction = session.beginTransaction();
+            Role reference = session.getReference(Role.class, id);
+            session.delete(reference);
+            transaction.commit();
         } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
+            if (transaction != null) {
+                transaction.rollback();
+            }
             logger.error("Roles not deleted");
             throw new DataProcessingException("Can't delete role with id: " + id, e);
         } finally {

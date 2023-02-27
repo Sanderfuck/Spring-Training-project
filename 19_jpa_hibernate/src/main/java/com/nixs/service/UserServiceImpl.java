@@ -2,15 +2,16 @@ package com.nixs.service;
 
 import com.nixs.dao.HibernateDao;
 import com.nixs.dao.HibernateUserDao;
-import com.nixs.model.Role;
 import com.nixs.model.User;
 import com.nixs.model.dto.UserDto;
+import jakarta.validation.Validator;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService {
+    private static Validator validator;
+
     private HibernateDao<User> dao;
     private RoleService roleService;
 
@@ -27,8 +28,8 @@ public class UserServiceImpl implements UserService {
         return dao.save(user);
     }
 
-    public boolean deleteUser(Long id) {
-        return dao.delete(id);
+    public void deleteUser(Long id) {
+        dao.delete(id);
     }
 
     public User getUser(Long id) {
@@ -36,10 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<UserDto> getUsers() {
-        Map<Long, String> roles = roleService.getAllRoles().stream()
-                .collect(Collectors.toMap(Role::getId, Role::getName));
-
         return dao.findAll().stream()
-                .map(user -> new UserDto(user, roles.get(user.getRoleId()))).collect(Collectors.toList());
+                .map(UserDto::new).collect(Collectors.toList());
     }
 }

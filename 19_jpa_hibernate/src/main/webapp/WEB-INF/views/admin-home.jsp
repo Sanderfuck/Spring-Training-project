@@ -67,7 +67,7 @@
             <td>${user.email}</td>
             <td>${user.firstName}</td>
             <td>${user.lastName}</td>
-            <td>${user.roleName}</td>
+            <td>${user.role.name}</td>
             <td>${user.age}</td>
             <td>
                 <form action="add-user" method="GET">

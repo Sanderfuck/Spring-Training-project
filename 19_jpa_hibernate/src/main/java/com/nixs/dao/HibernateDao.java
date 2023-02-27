@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface HibernateDao<T> {
     boolean save(T t);
 
-    boolean delete(Long id);
+    void delete(Long id);
 
     Optional<T> findById(Long id);
 

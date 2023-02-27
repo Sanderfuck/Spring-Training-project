@@ -6,6 +6,9 @@ import com.nixs.service.AuthenticationServiceImpl;
 import com.nixs.service.RoleServiceImpl;
 import com.nixs.service.UserServiceImpl;
 import com.nixs.service.ValidationService;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Path;
 import org.owasp.encoder.Encode;
 
 import javax.servlet.ServletException;
@@ -15,12 +18,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @WebServlet("/add-user")
 public class InsertUserServlet extends HttpServlet {
-    private UserServiceImpl userServiceImpl;
+    private UserServiceImpl userService;
+    private RoleServiceImpl roleService;
     private Long userId;
     private List<Role> roles;
     private String namePage;
@@ -28,7 +33,8 @@ public class InsertUserServlet extends HttpServlet {
 
     @Override
     public void init() {
-        userServiceImpl = new UserServiceImpl();
+        roleService = new RoleServiceImpl();
+        userService = new UserServiceImpl();
         roles = new RoleServiceImpl().getAllRoles();
     }
 
@@ -40,7 +46,7 @@ public class InsertUserServlet extends HttpServlet {
         User user = null;
 
         if (userId != null) {
-            user = userServiceImpl.getUser(userId);
+            user = userService.getUser(userId);
             namePage = "Edit User";
             nameButton = "Edit";
         } else {
@@ -62,11 +68,15 @@ public class InsertUserServlet extends HttpServlet {
         request.setAttribute("rolesList", roles);
         User user = userConstructor(request);
 
-        List<String> errors = ValidationService.validateUser(user, userId);
-        if (errors.isEmpty()) {
+        try {
             insertUser(user);
             response.sendRedirect("admin-home");
-        } else {
+        } catch (Exception e) {
+            Map<String, String> errors = ((ConstraintViolationException)e.getCause()).getConstraintViolations().stream()
+                    .collect(Collectors.toMap(err -> err.getPropertyPath().toString(), ConstraintViolation::getMessage));
+
+            System.out.println(errors);
+
             request.setAttribute("nameButton", nameButton);
             request.setAttribute("namePage", namePage);
             request.setAttribute("userDto", user);
@@ -82,24 +92,25 @@ public class InsertUserServlet extends HttpServlet {
         user.setEmail(Encode.forHtml(request.getParameter("email")));
         user.setFirstName(Encode.forHtml(request.getParameter("first_name")));
         user.setLastName(Encode.forHtml(request.getParameter("last_name")));
-        user.setRoleId(Long.parseLong(request.getParameter("role")));
+        user.setRole(roleService.getRoleByName(request.getParameter("role")));
         String birthday = request.getParameter("birthday");
         setUserBirthday(user, birthday);
 
         String getParameterPassword = request.getParameter("password");
         String login;
         String password;
-
+//
         if (userId != null) {
-            login = userServiceImpl.getUser(userId).getLogin();
+            login = userService.getUser(userId).getLogin();
             password = getPasswordForEditUser(getParameterPassword);
         } else {
             login = Encode.forHtml(request.getParameter("login"));
             password = AuthenticationServiceImpl.encryptPassword(getParameterPassword);
         }
-
+//
         user.setLogin(login);
         user.setPassword(password);
+//        user.setPassword(getParameterPassword);
         return user;
     }
 
@@ -122,7 +133,7 @@ public class InsertUserServlet extends HttpServlet {
     private String getPasswordForEditUser(String getParameterPassword) {
         String password;
         if (getParameterPassword.isEmpty()) {
-            password = userServiceImpl.getUser(userId).getPassword();
+            password = userService.getUser(userId).getPassword();
         } else {
             password = AuthenticationServiceImpl.encryptPassword(getParameterPassword);
         }
@@ -131,9 +142,9 @@ public class InsertUserServlet extends HttpServlet {
 
     private void insertUser(User user) {
         if (user.getId() == null) {
-            userServiceImpl.addUser(user);
+            userService.addUser(user);
         } else {
-            userServiceImpl.updateUser(user);
+            userService.updateUser(user);
         }
     }
 
