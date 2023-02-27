@@ -4,20 +4,15 @@ import com.nixs.dao.HibernateDao;
 import com.nixs.dao.HibernateUserDao;
 import com.nixs.model.User;
 import com.nixs.model.dto.UserDto;
-import jakarta.validation.Validator;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService {
-    private static Validator validator;
-
     private HibernateDao<User> dao;
-    private RoleService roleService;
 
     public UserServiceImpl() {
         dao = new HibernateUserDao();
-        roleService = new RoleServiceImpl();
     }
 
     public boolean addUser(User user) {

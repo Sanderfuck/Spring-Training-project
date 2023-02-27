@@ -13,9 +13,6 @@ import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 import org.hibernate.query.criteria.JpaCriteriaQuery;
 import org.hibernate.query.criteria.JpaRoot;
 
-//import javax.persistence.criteria.CriteriaBuilder;
-//import javax.persistence.criteria.CriteriaQuery;
-//import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +24,7 @@ public class HibernateRoleDao implements HibernateDao<Role> {
         sessionFactory = HibernateUtil.getInstance();
     }
 
+    //   ----- Constructor for testing-----
     public HibernateRoleDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

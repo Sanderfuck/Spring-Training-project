@@ -21,7 +21,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - JDBC_URL=jdbc:h2:tcp://db:1521/testdb;INIT=runscript from '/opt/sql/dml.sql'
+      - JDBC_URL=jdbc:h2:tcp://db:1521/testdb;INIT=runscript from '/opt/sql/ddl.sql'\;runscript from '/opt/sql/dml.sql'
       - JDBC_USER=sa
       - JDBC_PASSWORD=
     depends_on:

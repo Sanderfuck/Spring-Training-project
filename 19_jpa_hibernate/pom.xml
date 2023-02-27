@@ -196,11 +196,6 @@
             <artifactId>hibernate-validator-cdi</artifactId>
             <version>8.0.0.Final</version>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.expressly</groupId>
-            <artifactId>expressly</artifactId>
-            <version>5.0.0</version>
-        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -220,12 +215,5 @@
             <version>2.7.3</version>
             <scope>test</scope>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>mysql</groupId>-->
-<!--            <artifactId>mysql-connector-java</artifactId>-->
-<!--            <version>8.0.22</version>-->
-<!--        </dependency>-->
-
     </dependencies>
 </project>

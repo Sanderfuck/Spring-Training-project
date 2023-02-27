@@ -1,21 +1,16 @@
 package com.nixs.util;
 
-import com.nixs.model.Role;
-import com.nixs.model.User;
-import org.apache.logging.log4j.util.EnvironmentPropertySource;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
-import java.text.RuleBasedCollator;
 
 public class HibernateUtil {
     private static final SessionFactory instance = initSessionFactory();
 
+    private HibernateUtil() {
+    }
+
     private static SessionFactory initSessionFactory() {
-        Configuration configuration = new Configuration();
-            configuration.setProperty("hibernate.connection.url", "jdbc:h2:tcp://db:1521/testdb;INIT=runscript from '/opt/sql/dml.sql'");
-            configuration.setProperty("hibernate.connection.username", "sa");
-            configuration.setProperty("hibernate.connection.password", "");
+        Configuration configuration = getConfiguration();
 
         try {
             return configuration.configure().buildSessionFactory();
@@ -24,88 +19,34 @@ public class HibernateUtil {
         }
     }
 
+    private static Configuration getConfiguration() {
+        Configuration configuration = new Configuration();
+        String connectionUrl = System.getenv("JDBC_URL");
+        String connectionUsername = System.getenv("JDBC_USER");
+        String connectionPassword = System.getenv("JDBC_PASSWORD");
+
+        if (connectionUrl != null) {
+            configuration.setProperty("hibernate.connection.url", connectionUrl);
+        } else {
+            configuration.setProperty("hibernate.connection.url",
+                    "jdbc:h2:./mydb;INIT=runscript from 'classpath:/database/sql/dml.sql'");
+        }
+
+        if (connectionUsername != null) {
+            configuration.setProperty("hibernate.connection.username", connectionUsername);
+        } else {
+            configuration.setProperty("hibernate.connection.username", "root");
+        }
+
+        if (connectionPassword != null) {
+            configuration.setProperty("hibernate.connection.password", connectionPassword);
+        } else {
+            configuration.setProperty("hibernate.connection.password", "root");
+        }
+        return configuration;
+    }
+
     public static SessionFactory getInstance() {
         return instance;
     }
-
-//    ---------------------------------------------------------------
-//
-//    private static SessionFactory instance = getInstance();
-//    private static String userName = "sa";
-
-//    private static String password = "";
-//    private static String dbUrl = "jdbc:h2:./mydb;INIT=runscript from 'classpath:/database/sql/dml.sql'";
-//
-//    private HibernateUtil() {
-//    }
-//
-//    public static SessionFactory getInstance() {
-//        if (instance == null) {
-//            Configuration configuration = new Configuration();
-//            configuration.setProperty("hibernate.connection.username", userName);
-//            configuration.setProperty("hibernate.connection.password", password);
-//            configuration.setProperty("hibernate.connection.url", dbUrl);
-//            configuration.addAnnotatedClass(Role.class);
-//            configuration.addAnnotatedClass(User.class);
-//            configuration.configure();
-//            instance = configuration.buildSessionFactory();
-//        }
-//        return instance;
-//    }
-
-//------------------------------------------------------------------
-
-//    public static SessionFactory getInstance() {
-//        return instance;
-//    }
-
-//    private static SessionFactory instance = getInstance();
-//
-//    public static SessionFactory getInstance() {
-//        if (instance == null) {
-//            // loads configuration and mappings
-//            Configuration configuration = new Configuration();
-//            configuration.setProperty("hibernate.connection.url", "jdbc:h2:./mydb;DATABASE_TO_UPPER=false");
-//            configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-//            configuration.setProperty("hibernate.connection.username", "root");
-//            configuration.setProperty("hibernate.connection.password", "root");
-//            configuration.setProperty("hibernate.show_sql", "true");
-//            configuration.setProperty("hibernate.hbm2ddl.auto", "create-drop");
-//
-//            configuration.configure();
-//            ServiceRegistry serviceRegistry
-//                    = new StandardServiceRegistryBuilder()
-//                    .applySettings(configuration.getProperties()).build();
-//
-//            // builds a session factory from the service registry
-//            instance = configuration.buildSessionFactory(serviceRegistry);
-//        }
-//
-//        return instance;
-//    }
-
-
-//    ----------------------------------------------
-
-//    private static SessionFactory instance;
-//
-//    private HibernateUtil() {
-//
-//    }
-//
-//    public static SessionFactory getInstance() {
-//        if (instance == null) {
-//            Configuration configuration = new Configuration();
-//            configuration.setProperty("hibernate.connection.url", System.getenv("JDBC_URL"));
-//            configuration.setProperty("hibernate.connection.username", System.getenv("JDBC_USER"));
-//            configuration.setProperty("hibernate.connection.password", System.getenv("JDBC_PASSWORD"));
-//            configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-//            configuration.setProperty("connection.driver_class", "org.h2.Driver");
-//            configuration.setProperty("show_sql", "true");
-//            configuration.setProperty("hbm2ddl.auto", "update");
-//            configuration.configure();
-//            instance = configuration.buildSessionFactory();
-//        }
-//        return instance;
-//    }
 }

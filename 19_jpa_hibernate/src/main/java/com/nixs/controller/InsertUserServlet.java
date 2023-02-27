@@ -5,10 +5,8 @@ import com.nixs.model.User;
 import com.nixs.service.AuthenticationServiceImpl;
 import com.nixs.service.RoleServiceImpl;
 import com.nixs.service.UserServiceImpl;
-import com.nixs.service.ValidationService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Path;
 import org.owasp.encoder.Encode;
 
 import javax.servlet.ServletException;
@@ -72,7 +70,7 @@ public class InsertUserServlet extends HttpServlet {
             insertUser(user);
             response.sendRedirect("admin-home");
         } catch (Exception e) {
-            Map<String, String> errors = ((ConstraintViolationException)e.getCause()).getConstraintViolations().stream()
+            Map<String, String> errors = ((ConstraintViolationException) e.getCause()).getConstraintViolations().stream()
                     .collect(Collectors.toMap(err -> err.getPropertyPath().toString(), ConstraintViolation::getMessage));
 
             System.out.println(errors);
@@ -99,7 +97,7 @@ public class InsertUserServlet extends HttpServlet {
         String getParameterPassword = request.getParameter("password");
         String login;
         String password;
-//
+
         if (userId != null) {
             login = userService.getUser(userId).getLogin();
             password = getPasswordForEditUser(getParameterPassword);
@@ -107,10 +105,9 @@ public class InsertUserServlet extends HttpServlet {
             login = Encode.forHtml(request.getParameter("login"));
             password = AuthenticationServiceImpl.encryptPassword(getParameterPassword);
         }
-//
+
         user.setLogin(login);
         user.setPassword(password);
-//        user.setPassword(getParameterPassword);
         return user;
     }
 

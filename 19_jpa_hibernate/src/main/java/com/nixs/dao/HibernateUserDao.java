@@ -24,6 +24,8 @@ public class HibernateUserDao implements HibernateDao<User> {
         this.sessionFactory = HibernateUtil.getInstance();
     }
 
+
+//   ----- Constructor for testing-----
     public HibernateUserDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
