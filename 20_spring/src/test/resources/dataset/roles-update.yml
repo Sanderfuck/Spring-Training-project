@@ -1,0 +1,5 @@
+role:
+  - name: "ADMIN"
+    id: 1
+  - name: "USER"
+    id: 2
