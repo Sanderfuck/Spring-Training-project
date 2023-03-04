@@ -22,24 +22,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .failureForwardUrl("/login?error")
                 .successHandler(new LoginHandler())
-                .and()
+        .and()
                 .logout()
                 .invalidateHttpSession(true)
                 .deleteCookies()
                 .clearAuthentication(true)
                 .logoutSuccessUrl("/login?logout")
-                .and()
+        .and()
                 .authorizeRequests()
-                .antMatchers("/", "/registration", "/login")
+                .antMatchers("/", "/registration")
                 .permitAll()
                 .antMatchers("/user-home").hasAuthority("USER")
-                .antMatchers("/admin-home", "/add-user").hasAuthority("ADMIN")
-                .and().csrf().disable();
+                .antMatchers("/admin-home", "/add-user", "/delete").hasAuthority("ADMIN")
+        .and().csrf().disable();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailService).passwordEncoder(passwordEncoder);
     }
-
 }

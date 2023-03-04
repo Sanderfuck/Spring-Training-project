@@ -2,7 +2,6 @@ package com.nixs.config;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 import java.util.Properties;
 
 @Configuration
@@ -24,11 +24,20 @@ public class AppConfig {
 
     @Bean
     public DataSource getDataSource() {
+        String connectionUrl = System.getenv("JDBC_URL");
+        String connectionUsername = System.getenv("JDBC_USER");
+        String connectionPassword = System.getenv("JDBC_PASSWORD");
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(environment.getProperty("db.driver"));
-        dataSource.setUrl(environment.getProperty("db.url"));
-        dataSource.setUsername(environment.getProperty("db.username"));
-        dataSource.setPassword(environment.getProperty("db.password"));
+
+        dataSource.setUrl(Objects.requireNonNullElse(
+                connectionUrl, environment.getProperty("db.url")));
+
+        dataSource.setUsername(Objects.requireNonNullElse(
+                connectionUsername, environment.getProperty("db.username")));
+
+        dataSource.setPassword(Objects.requireNonNullElse(
+                connectionPassword, environment.getProperty("db.password")));
         return dataSource;
     }
 

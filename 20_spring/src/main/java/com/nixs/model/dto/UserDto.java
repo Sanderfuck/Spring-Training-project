@@ -1,30 +1,44 @@
 package com.nixs.model.dto;
 
-import com.nixs.model.User;
-import lombok.Getter;
+import lombok.Data;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
 
-public class UserDto extends User {
+@Data
+public class UserDto {
+    private Long id;
+
+    @NotBlank(message = "Login can`t be empty")
+    private String login;
+
+    private String password;
+
+    @Email(message = "Email format not correct")
+    private String email;
+
+    @NotBlank(message = "First name can`t be empty")
+    private String firstName;
+
+    @NotBlank(message = "Last name can`t be empty")
+    private String lastName;
+
+    private Date birthday;
+
+    private String roleName;
 
     private Integer age;
 
-    public UserDto(User user) {
-        super(user.getId(),
-                user.getLogin(),
-                user.getPassword(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getBirthday(),
-                user.getRole());
-    }
-
     public Integer getAge() {
         if (age == null) {
-            LocalDate localDate = getBirthday().toLocalDate();
-            age = Period.between(localDate, LocalDate.now()).getYears();
+            if (getBirthday() != null) {
+                LocalDate localDate = getBirthday().toLocalDate();
+                age = Period.between(localDate, LocalDate.now()).getYears();
+            }
         }
         return age;
     }

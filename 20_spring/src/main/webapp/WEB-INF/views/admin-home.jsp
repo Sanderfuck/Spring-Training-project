@@ -1,10 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/admin-home.css">
 
     <script type="text/javascript">
         function showConfirm() {
@@ -17,17 +17,19 @@
     </script>
     <meta charset="UTF-8">
     <title>User List</title>
-    ${user.firstName} ${user.lastName}
     <a href="<%=request.getContextPath()%>/logout"> Logout</a>
 
     <style>
         .table {
+            text-align: center;
             font-family: Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 60%;
+            align-content: center;
         }
 
         .table td, .table th {
+            align-content: center;
             border: 1px solid #ddd;
             padding: 8px;
         }
@@ -43,13 +45,14 @@
         .table th {
             padding-top: 12px;
             padding-bottom: 12px;
-            text-align: left;
+            text-align: center;
             background-color: #04AA6D;
             color: white;
         }
     </style>
 </head>
 <body>
+
 <h1>Users registered:</h1>
 <table class="table">
     <tr>
@@ -67,13 +70,19 @@
             <td>${user.email}</td>
             <td>${user.firstName}</td>
             <td>${user.lastName}</td>
-            <td>${user.role.name}</td>
+            <td>${user.roleName}</td>
             <td>${user.age}</td>
             <td>
                 <form action="add-user" method="GET">
                     <input type="hidden" name="userId" value="${user.id}">
                     <button type="submit">Edit</button>
                 </form>
+<%--                <form:form method="DELETE" action="delete">--%>
+<%--                    <input type="hidden" name="userId" value="${user.id}" />--%>
+<%--                    <button onclick="return showConfirm()" type="submit">Delete</button>--%>
+<%--&lt;%&ndash;                    <form:hidden path="userId" value="DELETE" />&ndash;%&gt;--%>
+<%--                </form:form>--%>
+
                 <form action="delete" method="POST">
                     <input type="hidden" name="userId" value="${user.id}">
                     <button onclick="return showConfirm()" type="submit">Delete</button>
@@ -87,3 +96,8 @@
 <br>
 </body>
 </html>
+<%--                <form:form method="DELETE"--%>
+<%--                           action="/delete" modelAttribute="user">--%>
+<%--                    <input type="hidden" name="userId" value="${user.id}">--%>
+<%--                    <button onclick="return showConfirm()" type="submit">Delete</button>--%>
+<%--                </form:form>--%>

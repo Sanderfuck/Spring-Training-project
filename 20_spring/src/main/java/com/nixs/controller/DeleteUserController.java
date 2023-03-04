@@ -16,5 +16,4 @@ public class DeleteUserController {
         userService.deleteUser(userId);
         return "redirect:/admin-home";
     }
-
 }

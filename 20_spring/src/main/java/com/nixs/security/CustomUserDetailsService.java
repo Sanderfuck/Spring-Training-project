@@ -1,6 +1,6 @@
 package com.nixs.security;
 
-import com.nixs.model.User;
+import com.nixs.model.dto.UserDto;
 import com.nixs.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,17 +17,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        Optional<User> userOptional = userService.getUserByName(name);
+        Optional<UserDto> userOptional = userService.getUserByName(name);
         if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
 
-        User user = userOptional.get();
+        UserDto userDto = userOptional.get();
         org.springframework.security.core.userdetails.User.UserBuilder builder =
                 org.springframework.security.core.userdetails.User.withUsername(name);
 
-        builder.password(user.getPassword());
-        builder.authorities(user.getRole().getName());
+        builder.password(userDto.getPassword());
+        builder.authorities(userDto.getRoleName());
         return builder.build();
     }
 }

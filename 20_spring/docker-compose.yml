@@ -15,7 +15,7 @@ services:
       - ./src/main/resources/database/sql/:/opt/sql
 
   app:
-    image: 19_jpa_hibernate
+    image: 20_spring
     build: .
     container_name: kapusniak-app
     ports:

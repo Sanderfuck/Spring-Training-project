@@ -1,10 +1,11 @@
 package com.nixs.service;
 
 import com.nixs.dao.HibernateDao;
-import com.nixs.dao.HibernateUserDao;
+import com.nixs.mapper.UserDtoMapper;
 import com.nixs.model.User;
 import com.nixs.model.dto.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,36 +13,48 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final HibernateDao<User> dao;
+    private final UserDtoMapper userDtoMapper;
+    private final HibernateDao<User> userDao;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserServiceImpl(HibernateDao<User> dao) {
-        this.dao = dao;
+
+    public boolean addUser(UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        User user = userDtoMapper.parseToModel(userDto);
+        return userDao.save(user);
     }
 
-    public boolean addUser(User user) {
-        return dao.save(user);
-    }
-
-    public boolean updateUser(User user) {
-        return dao.save(user);
+    public boolean updateUser(UserDto userDto) {
+        User userById = userDao.findById(userDto.getId()).get();
+        if (userDto.getPassword() != null) {
+            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        } else {
+            userDto.setPassword(userById.getPassword());
+        }
+        User user = userDtoMapper.parseToModel(userDto);
+        return userDao.save(user);
     }
 
     public void deleteUser(Long id) {
-        dao.delete(id);
+        userDao.delete(id);
     }
 
-    public User getUser(Long id) {
-        return dao.findById(id).get();
+    public UserDto getUser(Long id) {
+        User user = userDao.findById(id).get();
+        return userDtoMapper.parseToDto(user);
     }
 
-    public Optional<User> getUserByName(String name) {
-        return dao.findByName(name);
+    public Optional<UserDto> getUserByName(String name) {
+        Optional<User> user = userDao.findByName(name);
+        Optional<UserDto> userDto = Optional.of(userDtoMapper.parseToDto(user.orElseThrow()));
+        return userDto;
     }
 
     public List<UserDto> getUsers() {
-        return dao.findAll().stream()
-                .map(UserDto::new).collect(Collectors.toList());
+        return userDao.findAll().stream()
+                .map(userDtoMapper::parseToDto)
+                .collect(Collectors.toList());
     }
 }

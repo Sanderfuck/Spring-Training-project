@@ -1,7 +1,6 @@
 package com.nixs.service;
 
 import com.nixs.dao.HibernateDao;
-import com.nixs.dao.HibernateRoleDao;
 import com.nixs.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

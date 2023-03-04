@@ -3,6 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        body {
+            text-align: center;
+            margin-top: 250px;
+        }
+    </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <meta charset="UTF-8">
     <title>User Home</title>

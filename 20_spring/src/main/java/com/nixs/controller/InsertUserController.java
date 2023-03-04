@@ -1,7 +1,7 @@
 package com.nixs.controller;
 
 import com.nixs.model.Role;
-import com.nixs.model.User;
+import com.nixs.model.dto.UserDto;
 import com.nixs.service.RoleService;
 import com.nixs.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -11,15 +11,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,41 +36,35 @@ public class InsertUserController {
     @GetMapping("/add-user")
     public ModelAndView showAddUserPage(@RequestParam(name = "userId", required = false) Long userId,
                                         ModelAndView model) {
-
-        User user;
-        String namePage;
-        String nameButton;
+        UserDto userDto;
         if (userId != null) {
-            user = userService.getUser(userId);
-            namePage = "Edit User";
-            nameButton = "Edit";
+            userDto = userService.getUser(userId);
         } else {
-            user = new User();
-            namePage = "Add User";
-            nameButton = "Add";
+            userDto = new UserDto();
         }
-        model.addObject("nameButton", nameButton);
-        model.addObject("namePage", namePage);
-        model.addObject("userDto", user);
+        model.addObject("userDto", userDto);
         model.setViewName("add-user");
         return model;
     }
 
     @PostMapping("/add-user")
-    public String insert(@ModelAttribute("user") User user, BindingResult result, Model model) {
+    public String insert( @ModelAttribute("userDto") @Valid UserDto userDto,
+                         BindingResult result, Model model) {
+
         if (result.hasErrors()) {
+            model.addAttribute("userDto", userDto);
             return "add-user";
         } else {
-            insertUser(user);
+            insertUser(userDto);
             return "redirect:/admin-home";
         }
     }
 
-    private void insertUser(User user) {
-        if (user.getId() == null) {
-            userService.addUser(user);
+    private void insertUser(UserDto userDto) {
+        if (userDto.getId() == null) {
+            userService.addUser(userDto);
         } else {
-            userService.updateUser(user);
+            userService.updateUser(userDto);
         }
     }
 }

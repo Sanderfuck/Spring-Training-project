@@ -1,5 +1,8 @@
 package com.nixs.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,13 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Past;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -28,13 +24,10 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String login;
 
-    @NotEmpty
     private String password;
 
-    @Email
     private String email;
 
     @Column(name = "first_name")
@@ -43,7 +36,6 @@ public class User implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
-    @Past
     private Date birthday;
 
     @ManyToOne
