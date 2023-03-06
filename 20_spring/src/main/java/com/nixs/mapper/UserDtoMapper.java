@@ -6,6 +6,8 @@ import com.nixs.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+
 @Component
 @RequiredArgsConstructor
 public class UserDtoMapper {
@@ -19,7 +21,7 @@ public class UserDtoMapper {
         userDto.setEmail(user.getEmail());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
-        userDto.setBirthday(user.getBirthday());
+        userDto.setBirthday(user.getBirthday().toString());
         userDto.setRoleName(user.getRole().getName());
         return userDto;
     }
@@ -32,7 +34,7 @@ public class UserDtoMapper {
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
-        user.setBirthday(userDto.getBirthday());
+        user.setBirthday(Date.valueOf(userDto.getBirthday()));
         user.setRole(roleService.getRoleByName(userDto.getRoleName()));
         return user;
     }

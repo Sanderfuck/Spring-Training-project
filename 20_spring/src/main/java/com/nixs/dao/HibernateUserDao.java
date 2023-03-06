@@ -78,9 +78,7 @@ public class HibernateUserDao implements HibernateDao<User> {
         logger.info("Save method of user was called. Param: user = {}", user);
 
         Transaction transaction = null;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.saveOrUpdate(user);
             transaction.commit();
@@ -91,10 +89,6 @@ public class HibernateUserDao implements HibernateDao<User> {
             }
             logger.error("User not saved");
             throw new DataProcessingException("Can't save user: " + user, e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
@@ -104,9 +98,7 @@ public class HibernateUserDao implements HibernateDao<User> {
         logger.info("Delete method of user was called. Param: id = {}", id);
 
         Transaction transaction = null;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             User reference = session.getReference(User.class, id);
             session.delete(reference);
@@ -117,10 +109,6 @@ public class HibernateUserDao implements HibernateDao<User> {
             }
             logger.error("User not deleted");
             throw new DataProcessingException("Can't delete user with id: " + id, e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 }

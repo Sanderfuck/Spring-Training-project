@@ -79,9 +79,7 @@ public class HibernateRoleDao implements HibernateDao<Role> {
         logger.info("Save method of role was called. Param: user = {}", role);
 
         Transaction transaction = null;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.saveOrUpdate(role);
             transaction.commit();
@@ -92,10 +90,6 @@ public class HibernateRoleDao implements HibernateDao<Role> {
             }
             logger.error("Roles not saved");
             throw new DataProcessingException("Can't insert role: " + role, e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 
@@ -105,9 +99,7 @@ public class HibernateRoleDao implements HibernateDao<Role> {
         logger.info("Delete method of role was called. Param: role id = {}", id);
 
         Transaction transaction = null;
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             Role reference = session.getReference(Role.class, id);
             session.delete(reference);
@@ -118,10 +110,6 @@ public class HibernateRoleDao implements HibernateDao<Role> {
             }
             logger.error("Roles not deleted");
             throw new DataProcessingException("Can't delete role with id: " + id, e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 }

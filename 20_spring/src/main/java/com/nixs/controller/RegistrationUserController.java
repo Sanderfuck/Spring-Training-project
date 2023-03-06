@@ -18,6 +18,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class RegistrationUserController {
+    private static final String DEFAULT_ROLE_REGISTRATION = "USER";
     private final UserService userService;
     private final RoleService roleService;
     private List<Role> roles;
@@ -42,8 +43,9 @@ public class RegistrationUserController {
                                       Model model) {
         if (result.hasErrors()) {
             model.addAttribute("userDto", userDto);
-            return "registration";
+            return "registration?error";
         } else {
+            userDto.setRoleName(DEFAULT_ROLE_REGISTRATION);
             userService.addUser(userDto);
             return "redirect:/login?registrationSuccess";
         }

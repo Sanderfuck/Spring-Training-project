@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -17,14 +18,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     public Role getRoleByName(String name) {
-        return dao.findByName(name).get();
+        Optional<Role> role = dao.findByName(name);
+        if (role.isEmpty()) {
+            throw new RuntimeException("Role not founded by name");
+        }
+        return role.get();
     }
 
     public List<Role> getAllRoles() {
         return dao.findAll();
-    }
-
-    public Role getRoleById(Long id) {
-        return dao.findById(id).get();
     }
 }

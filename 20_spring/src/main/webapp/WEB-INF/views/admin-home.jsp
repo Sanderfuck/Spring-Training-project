@@ -5,16 +5,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-    <script type="text/javascript">
-        function showConfirm() {
-            if (window.confirm("Are you sure that you want to delete this user?")) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    </script>
     <meta charset="UTF-8">
     <title>User List</title>
     <a href="<%=request.getContextPath()%>/logout"> Logout</a>
@@ -77,11 +67,6 @@
                     <input type="hidden" name="userId" value="${user.id}">
                     <button type="submit">Edit</button>
                 </form>
-<%--                <form:form method="DELETE" action="delete">--%>
-<%--                    <input type="hidden" name="userId" value="${user.id}" />--%>
-<%--                    <button onclick="return showConfirm()" type="submit">Delete</button>--%>
-<%--&lt;%&ndash;                    <form:hidden path="userId" value="DELETE" />&ndash;%&gt;--%>
-<%--                </form:form>--%>
 
                 <form action="delete" method="POST">
                     <input type="hidden" name="userId" value="${user.id}">
@@ -96,8 +81,10 @@
 <br>
 </body>
 </html>
-<%--                <form:form method="DELETE"--%>
-<%--                           action="/delete" modelAttribute="user">--%>
-<%--                    <input type="hidden" name="userId" value="${user.id}">--%>
-<%--                    <button onclick="return showConfirm()" type="submit">Delete</button>--%>
-<%--                </form:form>--%>
+
+<script type="text/javascript">
+    function showConfirm() {
+        return window.confirm("Are you sure that you want to delete this user?");
+    }
+</script>
+

@@ -9,27 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
 
     <title>Add user</title>
-    <script>
-        function validation() {
-            var pass = document.getElementsByName('password')[0];
-            var confirm = document.getElementsByName('password_confirm')[0];
-            var add = document.getElementsByName('add')[0];
-            confirm.onkeyup = function () {
-                if (confirm.value !== pass.value) {
-                    pass.style.border = '3px solid red';
-                    confirm.style.border = '3px solid red';
-                    add.setAttribute('disabled', '');
-                } else {
-                    pass.style.border = '3px solid green';
-                    confirm.style.border = '3px solid green';
-                    add.removeAttribute('disabled');
-                }
-            }
-        }
-
-        window.onload = validation;
-    </script>
-
 </head>
 <body>
 
@@ -119,7 +98,26 @@
         </tr>
     </table>
 </form>
-
 </body>
-
 </html>
+
+<script>
+    function validation() {
+        var pass = document.getElementsByName('password')[0];
+        var confirm = document.getElementsByName('password_confirm')[0];
+        var add = document.getElementsByName('add')[0];
+        confirm.onkeyup = function () {
+            if (confirm.value !== pass.value) {
+                pass.style.border = '3px solid red';
+                confirm.style.border = '3px solid red';
+                add.setAttribute('disabled', '');
+            } else {
+                pass.style.border = '3px solid green';
+                confirm.style.border = '3px solid green';
+                add.removeAttribute('disabled');
+            }
+        }
+    }
+
+    window.onload = validation;
+</script>

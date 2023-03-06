@@ -4,10 +4,10 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.sql.Date;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class UserDto {
@@ -27,17 +27,24 @@ public class UserDto {
     @NotBlank(message = "Last name can`t be empty")
     private String lastName;
 
-    private Date birthday;
+    @Past
+    private LocalDate birthdayParse;
+
+    private String birthday;
 
     private String roleName;
 
     private Integer age;
 
+    private LocalDate getBirthdayParse() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(getBirthday(), formatter);
+    }
+
     public Integer getAge() {
         if (age == null) {
             if (getBirthday() != null) {
-                LocalDate localDate = getBirthday().toLocalDate();
-                age = Period.between(localDate, LocalDate.now()).getYears();
+                age = Period.between(getBirthdayParse(), LocalDate.now()).getYears();
             }
         }
         return age;

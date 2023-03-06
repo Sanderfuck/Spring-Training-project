@@ -27,11 +27,15 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean updateUser(UserDto userDto) {
-        User userById = userDao.findById(userDto.getId()).get();
+        Optional<User> userById = userDao.findById(userDto.getId());
+        if (userById.isEmpty()) {
+            throw new RuntimeException("User not updated by id");
+        }
+
         if (userDto.getPassword() != null) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         } else {
-            userDto.setPassword(userById.getPassword());
+            userDto.setPassword(userById.get().getPassword());
         }
         User user = userDtoMapper.parseToModel(userDto);
         return userDao.save(user);
@@ -42,14 +46,15 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDto getUser(Long id) {
-        User user = userDao.findById(id).get();
-        return userDtoMapper.parseToDto(user);
+        Optional<User> user = userDao.findById(id);
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not founded by id");
+        }
+        return userDtoMapper.parseToDto(user.get());
     }
 
     public Optional<UserDto> getUserByName(String name) {
-        Optional<User> user = userDao.findByName(name);
-        Optional<UserDto> userDto = Optional.of(userDtoMapper.parseToDto(user.orElseThrow()));
-        return userDto;
+        return userDao.findByName(name).map(userDtoMapper::parseToDto);
     }
 
     public List<UserDto> getUsers() {
