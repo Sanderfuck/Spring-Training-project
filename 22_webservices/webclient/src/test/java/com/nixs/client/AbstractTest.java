@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractTest {
+    static final String BASE_URL = "http://app:8080";
 
     @BeforeClass
     public static void setup() {
@@ -15,7 +16,7 @@ public abstract class AbstractTest {
                 .atMost(1, TimeUnit.MINUTES)
                 .until(() -> {
                     try {
-                        return RestAssured.get().statusCode() == 200;
+                        return RestAssured.get(BASE_URL).statusCode() == 200;
                     } catch (Exception e) {
                         return false;
                     }

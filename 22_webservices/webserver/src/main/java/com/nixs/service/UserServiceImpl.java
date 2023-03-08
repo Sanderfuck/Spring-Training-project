@@ -27,7 +27,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean updateUser(UserDto userDto) {
-        User userById = userDao.findById(userDto.getId()).get();
+        User userById =
+                userDao.findById(userDto.getId()).orElseThrow(()-> new RuntimeException("User not updated"));
+
         if (userDto.getPassword() != null) {
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         } else {
@@ -42,14 +44,13 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDto getUser(Long id) {
-        User user = userDao.findById(id).get();
+        User user = userDao.findById(id).orElseThrow(()-> new RuntimeException("User not founded"));
         return userDtoMapper.parseToDto(user);
     }
 
     public Optional<UserDto> getUserByName(String name) {
         Optional<User> user = userDao.findByName(name);
-        Optional<UserDto> userDto = Optional.of(userDtoMapper.parseToDto(user.orElseThrow()));
-        return userDto;
+        return Optional.of(userDtoMapper.parseToDto(user.orElseThrow()));
     }
 
     public List<UserDto> getUsers() {

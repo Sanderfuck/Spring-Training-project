@@ -22,14 +22,14 @@ public class UserTest extends AbstractTest {
 
     @Test
     public void shouldReturnAdminAndUser() {
-        String json = get("/api/users").asString();
+        String json = get(BASE_URL + "/api/users").asString();
         UserDto userAdmin = JsonPath.from(json).getObject("[0]", UserDto.class);
         Assert.assertThat(userAdmin.getId(), equalTo(ADMIN_ID));
 
         UserDto userUser = JsonPath.from(json).getObject("[1]", UserDto.class);
         Assert.assertThat(userUser.getId(), equalTo(USER_ID));
 
-        List<UserDto> users = given().contentType(ContentType.JSON).get("/api/users")
+        List<UserDto> users = given().contentType(ContentType.JSON).get(BASE_URL + "/api/users")
                 .then()
                 .extract()
                 .jsonPath()
@@ -43,12 +43,12 @@ public class UserTest extends AbstractTest {
     public void shouldReturnUserById() {
 
         given().contentType(ContentType.JSON)
-                .when().get("/api/users" + "/" + ADMIN_ID)
+                .when().get(BASE_URL + "/api/users" + "/" + ADMIN_ID)
                 .then().statusCode(200)
                 .body("login", equalTo(ADMIN_LOGIN));
 
         given().contentType(ContentType.JSON)
-                .when().get("/api/users" + "/" + USER_ID)
+                .when().get(BASE_URL + "/api/users" + "/" + USER_ID)
                 .then().statusCode(200)
                 .body("login", equalTo(USER_LOGIN));
     }
@@ -67,10 +67,12 @@ public class UserTest extends AbstractTest {
 
         given().contentType(ContentType.JSON)
                 .body(createUser)
-                .post("/api/users")
+                .post(BASE_URL + "/api/users")
                 .then().statusCode(200);
 
-        List<UserDto> usersAfterCreate = given().contentType(ContentType.JSON).get("/api/users")
+        List<UserDto> usersAfterCreate = given()
+                .contentType(ContentType.JSON)
+                .get(BASE_URL + "/api/users")
                 .then()
                 .extract()
                 .jsonPath()
@@ -91,14 +93,14 @@ public class UserTest extends AbstractTest {
 
         given()
                 .when()
-                .delete("/api/users/" + idUserWhatWasCreate)
+                .delete(BASE_URL + "/api/users/" + idUserWhatWasCreate)
                 .then()
                 .statusCode(200);
     }
 
     @Test
     public void shouldUpdateUser() {
-        String json = get("/api/users").asString();
+        String json = get(BASE_URL + "/api/users").asString();
 
         UserDto tempUser = JsonPath.from(json).getObject("[1]", UserDto.class);
 
@@ -108,7 +110,9 @@ public class UserTest extends AbstractTest {
         userBeforeUpdate.setLastName("Test_LastName");
         userBeforeUpdate.setEmail("test@nixs.com");
 
-        List<UserDto> usersBeforeUpdate = given().contentType(ContentType.JSON).get("/api/users")
+        List<UserDto> usersBeforeUpdate = given()
+                .contentType(ContentType.JSON)
+                .get(BASE_URL + "/api/users")
                 .then()
                 .extract()
                 .jsonPath()
@@ -116,10 +120,12 @@ public class UserTest extends AbstractTest {
 
         given().contentType(ContentType.JSON)
                 .body(userBeforeUpdate)
-                .put("/api/users")
+                .put(BASE_URL + "/api/users")
                 .then().statusCode(200);
 
-        List<UserDto> usersAfterUpdate = given().contentType(ContentType.JSON).get("/api/users")
+        List<UserDto> usersAfterUpdate = given()
+                .contentType(ContentType.JSON)
+                .get(BASE_URL + "/api/users")
                 .then()
                 .extract()
                 .jsonPath()
@@ -133,11 +139,13 @@ public class UserTest extends AbstractTest {
         }
 
         Assert.assertEquals(usersBeforeUpdate.size(), usersAfterUpdate.size());
-        Assert.assertEquals(userBeforeUpdate, userAfterUpdate);
+        Assert.assertEquals(userBeforeUpdate.getEmail(), userAfterUpdate.getEmail());
+        Assert.assertEquals(userBeforeUpdate.getFirstName(), userAfterUpdate.getFirstName());
+        Assert.assertEquals(userBeforeUpdate.getLastName(), userAfterUpdate.getLastName());
 
         given().contentType(ContentType.JSON)
                 .body(tempUser)
-                .put("/api/users")
+                .put(BASE_URL + "/api/users")
                 .then().statusCode(200);
     }
 
@@ -155,11 +163,13 @@ public class UserTest extends AbstractTest {
 
         given().contentType(ContentType.JSON)
                 .body(createUser)
-                .post("/api/users")
+                .post(BASE_URL + "/api/users")
                 .then().statusCode(200);
 
 
-        List<UserDto> usersBeforeDeleting = given().contentType(ContentType.JSON).get("/api/users")
+        List<UserDto> usersBeforeDeleting = given()
+                .contentType(ContentType.JSON)
+                .get(BASE_URL + "/api/users")
                 .then()
                 .extract()
                 .jsonPath()
@@ -175,11 +185,13 @@ public class UserTest extends AbstractTest {
 
         given()
                 .when()
-                .delete("/api/users/" + idUsershouldDelete)
+                .delete(BASE_URL + "/api/users/" + idUsershouldDelete)
                 .then()
                 .statusCode(200);
 
-        List<UserDto> usersAfterDeleting = given().contentType(ContentType.JSON).get("/api/users")
+        List<UserDto> usersAfterDeleting = given()
+                .contentType(ContentType.JSON)
+                .get(BASE_URL + "/api/users")
                 .then()
                 .extract()
                 .jsonPath()

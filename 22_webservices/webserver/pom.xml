@@ -15,6 +15,13 @@
         <spring.version>5.3.15</spring.version>
     </properties>
 
+    <distributionManagement>
+        <site>
+            <id>www.nixsolutions.com</id>
+            <url>scp://www.nixsolutions.com/project/</url>
+        </site>
+    </distributionManagement>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -33,6 +40,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -184,6 +192,14 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.12.1</version>
+                <configuration>
+                    <locales>en</locales>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
@@ -235,7 +251,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.2.0</version>
                 <configuration>
-                    <imageName>19_jpa_hibernate</imageName>
+                    <imageName>webserver</imageName>
                     <dockerDirectory>./</dockerDirectory>
                     <resources>
                         <resource>

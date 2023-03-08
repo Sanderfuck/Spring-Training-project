@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @Data
-
 public class UserDto {
     private Long id;
 
@@ -38,7 +37,6 @@ public class UserDto {
     }
 
     UserDto() {
-
     }
 
     UserDto(Long id,

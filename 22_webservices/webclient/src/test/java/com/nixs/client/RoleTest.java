@@ -18,20 +18,22 @@ public class RoleTest extends AbstractTest {
         String userName = "USER";
 
         given().contentType(ContentType.JSON)
-                .when().get("/api/roles/" + adminName)
-                .then().statusCode(200)
+                .when().get(BASE_URL + "/api/roles/" + adminName)
+                .then()
+                .statusCode(200)
                 .body("name", equalTo(adminName));
 
         given().contentType(ContentType.JSON)
-                .when().get("/api/roles/" + userName)
-                .then().statusCode(200)
+                .when().get(BASE_URL + "/api/roles/" + userName)
+                .then()
+                .statusCode(200)
                 .body("name", equalTo(userName));
     }
 
     @Test
     public void shouldReturnRoles() {
         List<Role> roles = given().contentType(ContentType.JSON)
-                .when().get("/api/roles")
+                .when().get(BASE_URL + "/api/roles")
                 .then().statusCode(200)
                 .extract().jsonPath()
                 .getList(".", Role.class);
