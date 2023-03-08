@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     image: oscarfonts/h2
-    container_name: kapusniak-database
+    container_name: kapusniak-database2
     ports:
       - "1521:1521"
     environment:
@@ -16,8 +16,9 @@ services:
 
   app:
     image: webserver
-    build: .
-    container_name: kapusniak-app
+    build:
+      context: ./webserver
+    container_name: kapusniak-app2
     ports:
       - "8080:8080"
     environment:
@@ -27,11 +28,11 @@ services:
     depends_on:
       - db
 
-  client:
-    image: client
-    build: .
-    container_name: kapusniak-test
-    environment:
-      - WEBSERVER_BASE_URI=app
-    depends_on:
-      - app
+#  client:
+#    image: maven:3.8.2-jdk-11
+#    container_name: kapusniak-test
+#    volumes:
+#      - ./webclient:/app
+#    command: mvn -f /app/pom.xml clean test
+#    depends_on:
+#      - app

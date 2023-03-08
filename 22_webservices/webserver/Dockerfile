@@ -3,6 +3,6 @@ COPY .. .
 RUN mvn clean package -DskipTests
 
 FROM tomcat:9.0-jdk11-openjdk
-COPY --from=builder /target/22_webservices-1.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=builder /target/webserver-1.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
