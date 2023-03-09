@@ -33,6 +33,6 @@ services:
     container_name: kapusniak-test
     volumes:
       - ./webclient:/app
-    command: mvn -f /app/pom.xml clean test
+    command: mvn -f /app/pom.xml clean test site
     depends_on:
       - app
